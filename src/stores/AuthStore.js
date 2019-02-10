@@ -8,8 +8,8 @@ class AuthStore {
   @observable errors = undefined
 
   @observable values = {
-    id: '',
-    password: '',
+    id: 'user',
+    password: 'user',
   }
 
   @action.bound setId(id) {
@@ -30,10 +30,16 @@ class AuthStore {
     this.errors = undefined
     return api.Auth.login(this.values.id, this.values.password)
       .then(CommonStore.setToken)
-      .catch(action('login errors', (err) => {
-        this.errors = err.message
-      }))
-      .finally(action('login completed', () => { this.inProgress = false }))
+      .catch(
+        action('login errors', err => {
+          this.errors = err.message
+        }),
+      )
+      .finally(
+        action('login completed', () => {
+          this.inProgress = false
+        }),
+      )
   }
 
   logout() {
